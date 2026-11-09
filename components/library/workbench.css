@@ -586,19 +586,6 @@
  * balance card is the widest at 400 — and no wider, so nothing is stretched.
  * Each component caps itself; the stage only centres them.
  */
-/*
- * The Reader Card opens its panel across the whole scene, top band and all:
- * the lights hanging over that band fade out while it is open, so they never
- * sit on the reader's title, and come back as it folds into the card.
- */
-.wbstage__frame .flights {
-  transition: opacity 0.35s ease;
-}
-
-.wbstage__frame:has(.prc[data-open]) .flights {
-  opacity: 0;
-}
-
 .wbstage__hold {
   position: relative;
   display: flex;
