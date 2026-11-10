@@ -1,6 +1,8 @@
 "use client";
 
+import { Fragment } from "react";
 import Link from "next/link";
+import AdSlot from "../AdSlot";
 import BlocxMark from "./BlocxMark";
 import BlocxFooter from "./BlocxFooter";
 import GitHubStars from "../hero/GitHubStars";
@@ -21,6 +23,9 @@ import "./blocks.css";
  */
 export default function BlocksIndex() {
   const { isSaved } = useSaved();
+  /* the ad goes in the break after the first shelf that has blocks, when another follows it */
+  const filled = SHELF_ORDER.filter((category) => blocksIn(category).length > 0);
+  const adAfter = filled.length > 1 ? filled[0] : null;
 
   return (
     <div className="blx blx--index">
@@ -44,7 +49,8 @@ export default function BlocksIndex() {
           const blocks = blocksIn(category);
           if (!blocks.length) return null;
           return (
-            <section key={category} id={category} className="blx-shelf" aria-labelledby={`shelf-${category}`}>
+            <Fragment key={category}>
+            <section id={category} className="blx-shelf" aria-labelledby={`shelf-${category}`}>
               {/* titles and cards rise as they scroll in (.pin-reveal, globals.css): never hidden waiting for script */}
               <h2 id={`shelf-${category}`} className="blx-shelf__title pin-reveal">
                 {shelfName(category)}:
@@ -58,6 +64,8 @@ export default function BlocksIndex() {
                 ))}
               </ul>
             </section>
+            {category === adAfter && <AdSlot name="blocxDisplay" format="display" className="blx-ad" />}
+            </Fragment>
           );
         })}
       </main>

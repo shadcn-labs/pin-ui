@@ -17,7 +17,7 @@ export default function PrivacyPage() {
   return (
     <LegalPage
       title="Privacy Policy"
-      updated="2026-10-02"
+      updated="2026-11-11"
       summary="Pin UI is a waitlist and a component library. It collects the little it needs to run those two things, and nothing else."
     >
       <h2>The short version</h2>
@@ -77,15 +77,55 @@ export default function PrivacyPage() {
       <h2>Analytics</h2>
       <p>
         Pin UI uses Vercel Web Analytics to count page views. It sets no cookies, does not follow
-        you between sites, and reports visits in aggregate rather than as individuals.
-        There is no Google Analytics, no advertising pixel, and no third-party tracker on this site.
+        you between sites, and reports visits in aggregate rather than as individuals. There is no
+        Google Analytics on this site.
+      </p>
+
+      <h2>Advertising</h2>
+      <p>
+        A few pages carry ads served by Google AdSense: the full component list, the Blocx index,
+        and each Blocx block&rsquo;s write-up. The landing page and the live component pages carry
+        none. Ads are what keep the library free.
+      </p>
+      <ul>
+        <li>
+          Third-party vendors, including Google, use cookies to serve ads based on your previous
+          visits to this and other websites.
+        </li>
+        <li>
+          Google&rsquo;s use of advertising cookies lets it and its partners show you ads based on
+          your visits to this site and others on the internet. How Google uses that information is
+          described in{" "}
+          <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">
+            How Google uses information from sites that use its services
+          </a>
+          .
+        </li>
+        <li>
+          You can turn off personalised advertising in{" "}
+          <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">
+            Google&rsquo;s Ads Settings
+          </a>
+          , or opt out of other vendors&rsquo; use of cookies for personalised ads at{" "}
+          <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">
+            aboutads.info
+          </a>
+          .
+        </li>
+      </ul>
+      <p>
+        Those cookies are set and read by Google, not by Pin UI, and Pin UI never sees what they
+        contain. Visitors in the European Economic Area, the UK and Switzerland are asked for their
+        consent before any personalised ad is shown.
       </p>
 
       <h2>What is kept in your own browser</h2>
       <p>
-        One thing: whether you chose the light or the crimson theme, saved under{" "}
-        <strong>pin-ui-theme</strong> so the site does not forget between visits. It never leaves
-        your device and is not readable by us. Clearing your site data removes it.
+        Pin UI itself keeps one thing: whether you chose the light or the crimson theme, saved
+        under <strong>pin-ui-theme</strong> so the site does not forget between visits. It never
+        leaves your device and is not readable by us. Clearing your site data removes it. On the
+        pages that carry ads, Google&rsquo;s advertising cookies are kept as well, as described
+        above.
       </p>
       <p>
         The component demos on this site run entirely in your browser. Nothing you do with them —

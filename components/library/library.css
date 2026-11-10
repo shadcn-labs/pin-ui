@@ -323,6 +323,18 @@
   border-top: 1px solid var(--lib-faint);
 }
 
+/* the ad after the first shelf sits in the same ruled break the shelves use */
+.lib .lib__ad {
+  margin: 2.2em 0 0;
+  padding-top: 2.4em;
+  border-top: 1px solid var(--lib-faint);
+}
+
+.lib__ad + .lib__shelf {
+  margin-top: 2.2em;
+  border-top: 1px solid var(--lib-faint);
+}
+
 /*
  * Columns that hold their width: a shelf with one or two components keeps the
  * same three-up rhythm as the rest, rather than stretching one card across the

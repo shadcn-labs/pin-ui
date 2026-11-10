@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import AdSlot from "@/components/AdSlot";
 import BlocksLink from "@/components/BlocksLink";
 import { motion, useReducedMotion } from "motion/react";
 import ThemeMark from "../ThemeMark";
@@ -171,7 +172,8 @@ export default function LibraryIndex() {
         </div>
 
         {SHELVES.map((shelf, si) => (
-          <section className="lib__shelf" id={shelf.id} key={shelf.id} aria-labelledby={`${shelf.id}-title`}>
+          <Fragment key={shelf.id}>
+          <section className="lib__shelf" id={shelf.id} aria-labelledby={`${shelf.id}-title`}>
             <header className="lib__shelfHead">
               <h2 className="lib__shelfTitle" id={`${shelf.id}-title`}>
                 {shelf.name}
@@ -186,6 +188,9 @@ export default function LibraryIndex() {
               ))}
             </ul>
           </section>
+          {/* one ad, in the break after the first shelf: under the fold, between rows, never inside one */}
+          {si === 0 && SHELVES.length > 1 && <AdSlot name="indexDisplay" format="display" className="lib__ad" />}
+          </Fragment>
         ))}
       </main>
 

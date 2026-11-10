@@ -2,6 +2,7 @@
 
 import { useId, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion, type Transition } from "motion/react";
+import AdSlot from "../AdSlot";
 import CodeBlock, { type CodePane } from "../library/CodeBlock";
 import { useCopy } from "../library/useCopy";
 import { IconCheck, IconCopy } from "./icons";
@@ -196,6 +197,13 @@ export default function BlockDocs({
       <Section id={id("avoid")} title="When not to use">
         <List items={docs.avoid} />
       </Section>
+
+      {/*
+        The in-article unit, where AdSense suggests one: a couple of short text
+        sections into the write-up, and well clear of the install steps' copy
+        buttons below, so it can never be pressed by mistake.
+      */}
+      <AdSlot name="docsInArticle" format="in-article" className="blx-ad blx-ad--docs" />
 
       <Section id={id("install")} title="Installation">
         <p className="blx-doc__p">
