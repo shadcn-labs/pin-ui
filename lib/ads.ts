@@ -9,10 +9,10 @@
  *   docsInArticle  "UI2"   In-article   /blocx/[slug], inside the docs, after the first two text sections
  *   blocxDisplay   "UI 3"  Display      /blocx, after the first shelf
  *
- * The AdSense library is loaded by the ad slot itself (components/AdSlot.tsx),
- * so only these three pages ever download it. Site verification uses the
- * `google-adsense-account` meta tag set in app/layout.tsx, and public/ads.txt
- * names this publisher as an authorised seller.
+ * The AdSense library is the code snippet AdSense asks for, in the <head> of
+ * every page (app/layout.tsx), which is also what its site verification looks
+ * for; the `google-adsense-account` meta tag beside it verifies the site too,
+ * and public/ads.txt names this publisher as an authorised seller.
  */
 
 export const ADSENSE_CLIENT = "ca-pub-3898386786530632";
