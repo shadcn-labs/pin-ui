@@ -163,6 +163,47 @@ export type Entry = {
 
 const ENTRIES: Entry[] = [
   {
+    slug: "presence-cards",
+    category: "cards",
+    name: "Presence Cards",
+    tagline: "Two cards on a shared canvas, worked on live by four people at once.",
+    blurb:
+      "An Activity heatmap and a Content card on a soft peach field, with four collaborators at work on them. Two paint the heatmap, one drags a corner radius handle on the artwork and one sweeps a selection across the title, each cursor travelling on a spring the way a hand moves a mouse. Everything they do, you can do too: paint the heatmap, drag the artwork's corners round, recolour it, and select and rewrite its title.",
+    highlights: ["Four live cursors", "Drag the corner radius", "Rewrite the title", "Stacks on a phone"],
+    /* a recording of the live stage in its dark theme: the four at work, and a visitor painting cells and dragging the artwork's corner */
+    clip: "/clips/loop/presence-cards.mp4?v=2",
+    /* the loop's own first frame (v=2: it replaced the screenshot that stood in before the recording) */
+    poster: "/clips/loop/presence-cards.jpg?v=2",
+    sound: false,
+    /* the recording leaves wide field around the scene: 1.3 fills the card and still keeps every name tag in */
+    zoom: 1.3,
+    stage: "#f4f4f5",
+    stageDark: "#0d0d0f",
+    clipStage: "#0d0c0f",
+    /* a scene: the canvas and its blooms fill the whole stage */
+    fill: true,
+    usage: `import PresenceCards from "@/components/library/PresenceCards";
+
+<PresenceCards theme={theme} />`,
+    props: [
+      { name: "theme", type: "\"light\" | \"dark\"", fallback: "\"light\"", note: "Which set of colours the canvas, the cards and the heatmap are drawn in. The collaborators keep their own." },
+      { name: "autoplay", type: "boolean", fallback: "true", note: "The collaborators' loops. Off, everyone arrives and rests at home, and the heatmap is left to the visitor." },
+      { name: "fill", type: "boolean", fallback: "false", note: "Take the container's whole box. Without it the scene is 480px tall with rounded corners." },
+    ],
+    files: [
+      { name: "PresenceCards.tsx", lang: "tsx" },
+      { name: "presence-cards.css", lang: "css" },
+    ],
+    info: {
+      paragraphs: [
+        "Every cursor moves on a spring tuned like a hand on a mouse: it travels, dips as it presses, rings as it clicks and springs back as it lets go. Dragging the radius handle uses a slower, more deliberate spring than travelling to it, and the heatmap's cells fill with a small liquid pop. The painters keep the board close to the drawing, lighting a few cells and then tidying up, and a cell you paint yourself is yours: they leave it alone after that.",
+        "The Content card is yours to work on as well. Drag any of the four round handles to set the artwork's corner radius, with a live readout over the frame, or focus the handle and use the arrow keys. Press the artwork to cycle its colours. Press the title or the line under it to select it, and press again, double-click or hit Enter to rewrite it in place: Enter keeps it, Escape puts it back. Whatever you take hold of, the collaborator working there lets go, steps back home and waits, and when they return they work from what you left, so tiago's selection is as wide as your new title and kev rounds the corner you set.",
+        "The scene is laid out in design pixels and scaled to whatever box it is given, in one of two arrangements: the cards side by side, or stacked. It takes whichever lets it be drawn larger, so on a phone it stacks instead of shrinking, and because every point a cursor aims for is measured from a card, the same choreography plays in both. Nothing runs while it is off screen or the tab is hidden, and with reduced motion it fades in once and holds still.",
+      ],
+    },
+    origin: { label: "Folder · Presence Cards" },
+  },
+  {
     slug: "theme-switch",
     category: "controls",
     name: "Theme Switch",
