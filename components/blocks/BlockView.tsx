@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion, type Transition } from "motion/react";
 import BlocxMark from "./BlocxMark";
 import BlocxFooter from "./BlocxFooter";
+import AdRail from "../ads/AdRail";
 import GitHubStars from "../hero/GitHubStars";
 import CodeBlock, { type CodePane } from "../library/CodeBlock";
 import { useCopy } from "../library/useCopy";
@@ -395,6 +396,8 @@ export default function BlockView({
         </main>
       </LayoutGroup>
 
+      {/* the skyscraper, only in an empty margin on a wide screen */}
+      <AdRail anchor=".blx-main" />
       <BlocxFooter />
     </div>
   );

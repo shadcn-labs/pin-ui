@@ -3,6 +3,8 @@ import Link from "next/link";
 import SiteFooter from "../hero/SiteFooter";
 import MobileMenu from "../MobileMenu";
 import SmoothScroll from "../hero/SmoothScroll";
+import AdSlot from "../ads/AdSlot";
+import AdTag from "../AdTag";
 import "@/app/hero.css";
 import "@/app/sections.css";
 import "./legal.css";
@@ -22,6 +24,7 @@ export default function LegalPage({
   updated,
   summary,
   children,
+  ads = false,
 }: {
   title: string;
   /** The date the wording last changed, as an ISO day. */
@@ -29,6 +32,8 @@ export default function LegalPage({
   /** One line under the title, saying what the page is for in plain words. */
   summary: string;
   children: ReactNode;
+  /** A reading page that carries ads (the FAQ). The policies never do. */
+  ads?: boolean;
 }) {
   const shown = new Date(`${updated}T00:00:00Z`).toLocaleDateString("en-GB", {
     day: "numeric",
@@ -72,10 +77,13 @@ export default function LegalPage({
         </p>
 
         <div className="legal__body">{children}</div>
+        {/* after the last answer, where reading is done */}
+        {ads && <AdSlot unit="native" className="legal__ad" />}
       </main>
 
       <SiteFooter />
       <SmoothScroll />
+      {ads && <AdTag />}
     </div>
   );
 }

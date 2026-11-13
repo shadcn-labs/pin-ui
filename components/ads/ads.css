@@ -1,0 +1,144 @@
+/* ===========================================================================
+   Ads (AdSlot.tsx, AdRail.tsx).
+
+   A slot is quiet: a small "Advertisement" label and the ad, centred, in the
+   page's own colour. It is spaced off whatever is around it, so an ad is never
+   pressed against a button or a card it could be mistaken for. Pages place a
+   slot in their own rhythm with a class of their own.
+=========================================================================== */
+
+.pinad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6em;
+  width: 100%;
+  margin: 2.5em auto;
+  color: inherit;
+}
+.pinad[hidden] {
+  display: none;
+}
+/* a banner too wide for its column is not there at all: no room, no rule, no label */
+.pinad--banner:not([data-fits]) {
+  display: none !important;
+}
+
+.pinad__label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1;
+  opacity: 0.45;
+}
+
+.pinad__box {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  max-width: 100%;
+}
+.pinad--native .pinad__box {
+  width: 100%;
+  max-width: 1100px;
+}
+
+.pinad__frame {
+  display: block;
+  border: 0;
+  background: transparent;
+  color-scheme: normal;
+}
+.pinad--native .pinad__frame {
+  width: 100%;
+}
+
+/* localhost only: where a slot Adsterra left empty would be */
+.pinad__dev {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 0.5em 1em;
+  border: 1px dashed currentColor;
+  border-radius: 10px;
+  font-size: 12px;
+  text-align: center;
+  opacity: 0.5;
+}
+
+/* ── placements ────────────────────────────────────────────────────────── */
+
+/* the component list: in the ruled break between shelves, as a shelf would be */
+.lib .lib__ad {
+  margin: 2.2em 0 0;
+  padding-top: 2.4em;
+  border-top: 1px solid var(--lib-faint, rgb(127 127 127 / 0.18));
+}
+.lib .lib__ad + .lib__shelf {
+  margin-top: 2.2em;
+  border-top: 1px solid var(--lib-faint, rgb(127 127 127 / 0.18));
+}
+.lib .lib__ad--end {
+  margin-bottom: 1em;
+}
+
+/* Blocx: the shelves' flex column already spaces its children */
+.blx .blx-ad {
+  margin: 0;
+  color: var(--blx-ink, inherit);
+}
+.blx .blx-ad--docs {
+  margin: 0.5em 0;
+}
+
+/* a component's write-up: after the last of it, set off by the same space as its sections */
+.wbdoc .wbdoc__ad {
+  margin: 3em 0 1em;
+}
+
+/* the FAQ: after the last answer */
+.legal .legal__ad {
+  margin: 3.5em 0 0;
+}
+
+/* the landing: in its own break between two sections */
+.landing-ad {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 4vw, 48px);
+  box-sizing: border-box;
+}
+
+/* ── the side rail ─────────────────────────────────────────────────────── */
+.pinad-rail {
+  position: fixed;
+  top: 50%;
+  right: 32px;
+  z-index: 5;
+  width: 160px;
+  transform: translateY(-50%);
+  transition: opacity 0.3s ease, visibility 0.3s;
+}
+.pinad-rail .pinad {
+  margin: 0;
+}
+.pinad-rail[data-away] {
+  opacity: 0;
+  visibility: hidden;
+}
+
+@media (max-width: 700px) {
+  .pinad {
+    margin: 2em auto;
+  }
+}
+
+@media print {
+  .pinad,
+  .pinad-rail {
+    display: none !important;
+  }
+}

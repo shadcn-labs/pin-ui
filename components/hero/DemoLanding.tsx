@@ -7,6 +7,7 @@ import UniqueSection from "./UniqueSection";
 import LazyHydrate from "./LazyHydrate";
 import SponsorSection from "@/sponsor/landing/SponsorSection";
 import { SPONSOR_ENABLED } from "@/sponsor/config";
+import AdSlot from "@/components/ads/AdSlot";
 
 /*
  * What sits below the first screen is its own chunk. It is still rendered on
@@ -34,6 +35,14 @@ export default function DemoLanding() {
     <div className="site landing cards-v2">
       <HeroSection />
       <UniqueSection />
+      {/*
+        One Native Banner on the landing, well below the hero, in the break
+        between the components and what people say about them. Nothing
+        floats over the page here: the hero is the first impression.
+      */}
+      <div className="landing-ad">
+        <AdSlot unit="native" />
+      </div>
       {/* far below the first screen: server-rendered as ever, hydrated as they come near */}
       <LazyHydrate>
         <Testimonials />

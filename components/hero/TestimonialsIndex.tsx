@@ -3,6 +3,8 @@
 import { motion, useReducedMotion } from "motion/react";
 import PageBar from "../PageBar";
 import SiteFooter from "./SiteFooter";
+import AdSlot from "../ads/AdSlot";
+import AdTag from "../AdTag";
 import TestimonialCard from "./TestimonialCard";
 import { TESTIMONIALS } from "@/lib/testimonials";
 import { softSpring } from "@/lib/motion";
@@ -60,9 +62,12 @@ export default function TestimonialsIndex() {
             </motion.div>
           ))}
         </div>
+        {/* after the last card, where reading is done */}
+        <AdSlot unit="native" className="lib__ad lib__ad--end" />
       </main>
 
       <SiteFooter />
+      <AdTag />
     </div>
   );
 }

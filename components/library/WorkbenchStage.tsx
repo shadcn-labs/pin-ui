@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
+import AdSlot from "@/components/ads/AdSlot";
 import CodeBlock, { type CodePane } from "./CodeBlock";
 import InstallBlock from "./InstallBlock";
 import ChipsEditor, { type ChipsSettings } from "./ChipsEditor";
@@ -393,6 +394,13 @@ export default function WorkbenchStage({
               <CodeBlock label={entry.slug} panes={panes} />
             </section>
           )}
+          {/*
+            A Native Banner at the foot of the write-up, once someone has
+            opened it and read to the end. Never on the stage itself: the stage
+            is where people play, and it stays the whole window until they ask
+            for more.
+          */}
+          <AdSlot unit="native" className="wbdoc__ad" />
         </div>
       )}
     </main>

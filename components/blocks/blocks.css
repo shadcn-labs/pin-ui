@@ -331,12 +331,6 @@ span.blx-mark__badge {
   scroll-margin-top: 40px;
 }
 
-/* the ads (components/AdSlot.tsx) sit in the flex columns here, whose gap already spaces them */
-.blx .blx-ad {
-  margin: 0;
-  color: var(--blx-ink);
-}
-
 .blx-shelf__title {
   margin: 0 0 6px;
   color: var(--blx-ink);

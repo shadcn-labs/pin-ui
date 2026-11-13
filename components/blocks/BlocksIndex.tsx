@@ -2,7 +2,9 @@
 
 import { Fragment } from "react";
 import Link from "next/link";
-import AdSlot from "../AdSlot";
+import AdTag from "../AdTag";
+import AdSlot from "../ads/AdSlot";
+import AdRail from "../ads/AdRail";
 import BlocxMark from "./BlocxMark";
 import BlocxFooter from "./BlocxFooter";
 import GitHubStars from "../hero/GitHubStars";
@@ -23,9 +25,9 @@ import "./blocks.css";
  */
 export default function BlocksIndex() {
   const { isSaved } = useSaved();
-  /* the ad goes in the break after the first shelf that has blocks, when another follows it */
+  /* the Native Banner sits after the first shelf with blocks on it, when another follows (else the leaderboard closes the page alone) */
   const filled = SHELF_ORDER.filter((category) => blocksIn(category).length > 0);
-  const adAfter = filled.length > 1 ? filled[0] : null;
+  const firstFilled = filled.length > 1 ? filled[0] : null;
 
   return (
     <div className="blx blx--index">
@@ -64,13 +66,18 @@ export default function BlocksIndex() {
                 ))}
               </ul>
             </section>
-            {category === adAfter && <AdSlot name="blocxDisplay" format="display" className="blx-ad" />}
+            {category === firstFilled && <AdSlot unit="native" className="blx-ad" />}
             </Fragment>
           );
         })}
+        <AdSlot unit="leaderboard" className="blx-ad" />
       </main>
 
+      <AdRail anchor=".blx-shelves" />
+
       <BlocxFooter />
+      {/* the ad network, loaded only once the visitor is browsing (components/AdTag.tsx) */}
+      <AdTag />
     </div>
   );
 }

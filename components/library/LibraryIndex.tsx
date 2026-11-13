@@ -2,7 +2,9 @@
 
 import { Fragment, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import AdSlot from "@/components/AdSlot";
+import AdTag from "@/components/AdTag";
+import AdSlot from "@/components/ads/AdSlot";
+import AdRail from "@/components/ads/AdRail";
 import BlocksLink from "@/components/BlocksLink";
 import { motion, useReducedMotion } from "motion/react";
 import ThemeMark from "../ThemeMark";
@@ -188,13 +190,19 @@ export default function LibraryIndex() {
               ))}
             </ul>
           </section>
-          {/* one ad, in the break after the first shelf: under the fold, between rows, never inside one */}
-          {si === 0 && SHELVES.length > 1 && <AdSlot name="indexDisplay" format="display" className="lib__ad" />}
+          {/* a Native Banner in the break after the first shelf: between rows, never inside one */}
+          {si === 0 && SHELVES.length > 1 && <AdSlot unit="native" className="lib__ad" />}
           </Fragment>
         ))}
+        {/* the leaderboard closes the list, where reading is done; it stands down below 728px */}
+        <AdSlot unit="leaderboard" className="lib__ad lib__ad--end" />
       </main>
 
+      {/* the skyscraper, only in an empty margin on a wide screen */}
+      <AdRail anchor=".lib" />
       <SiteFooter />
+      {/* the ad network, loaded only once the visitor is browsing (components/AdTag.tsx) */}
+      <AdTag />
     </div>
   );
 }

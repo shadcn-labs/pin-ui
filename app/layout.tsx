@@ -4,7 +4,6 @@ import { Analytics } from "@vercel/analytics/next";
 import { Caveat, Manrope, Newsreader, Tinos } from "next/font/google";
 import { LINKS } from "@/lib/links";
 import { SITE_URL } from "@/lib/site";
-import { ADSENSE_CLIENT, ADS_LIVE } from "@/lib/ads";
 import FaviconSync from "@/components/FaviconSync";
 import BlocxGate from "@/components/BlocxGate";
 import NoFlashScript from "@/components/NoFlashScript";
@@ -124,8 +123,6 @@ export const metadata: Metadata = {
     creator: "@RachitThakur146",
   },
   robots: { index: true, follow: true },
-  /* Google AdSense site verification by meta tag, alongside the code snippet in <head> below */
-  other: { "google-adsense-account": ADSENSE_CLIENT },
 };
 
 export const viewport: Viewport = {
@@ -224,20 +221,6 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: safeJsonLd(webSiteJsonLd()) }}
         />
-
-        {/*
-          Google AdSense, exactly as AdSense asks for it: in the <head> of every
-          page, in the server-rendered HTML, so its site verification finds it.
-          It is async, so it never blocks the page. Production only — AdSense
-          does not serve to localhost. The ad units themselves are AdSlot.tsx.
-        */}
-        {ADS_LIVE && (
-          <script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
-            crossOrigin="anonymous"
-          />
-        )}
       </head>
       <body>
         <FaviconSync />
