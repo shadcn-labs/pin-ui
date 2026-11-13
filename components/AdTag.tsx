@@ -1,19 +1,17 @@
 "use client";
 
 import { useEffect } from "react";
-import { ADS_ON, SOCIAL_BAR_SRC } from "@/lib/adsterra";
 
 /**
- * Adsterra's Social Bar.
+ * The ad network's tag.
  *
  * It is a single script with no container: the network draws what it shows
  * itself rather than filling a box on the page. So what keeps it out of the
  * way is where and when it is loaded, and both are decided here.
  *
  * Where: only the pages people browse and read — the component list, the
- * Blocx index and each Blocx write-up, the FAQ and the testimonials, which
- * render this. Never the landing page, and never a component's live stage,
- * where people come to play.
+ * Blocx index and each Blocx write-up, which render this. Never the landing
+ * page, and never a component's live stage, where people come to play.
  *
  * When: not with the page. It waits until the visitor has started using the
  * page (a scroll, a press or a key), or until the page has been open and
@@ -22,17 +20,19 @@ import { ADS_ON, SOCIAL_BAR_SRC } from "@/lib/adsterra";
  * press on the page is never the one an ad answers.
  *
  * Once loaded it is loaded for the visit: moving between pages does not load
- * it again. NEXT_PUBLIC_ADS=off switches it off with every other unit.
+ * it again. Production only — in development nothing is requested.
  */
 
+const SRC = "https://bauval.org/14/50aa0cb20eedc764a879b7bc3f921d31";
 const ID = "pin-ad-tag";
+const LIVE = process.env.NODE_ENV === "production";
 /* a visitor who only reads still gets it, once the page has been open and still this long */
 const SETTLE_MS = 6000;
 const STARTS = ["pointerdown", "keydown", "scroll", "touchstart"] as const;
 
 export default function AdTag() {
   useEffect(() => {
-    if (!ADS_ON || document.getElementById(ID)) return;
+    if (!LIVE || document.getElementById(ID)) return;
 
     let armed = true;
     let idle: number | undefined;
@@ -42,7 +42,7 @@ export default function AdTag() {
       if (document.getElementById(ID)) return;
       const script = document.createElement("script");
       script.id = ID;
-      script.src = SOCIAL_BAR_SRC;
+      script.src = SRC;
       script.async = true;
       /* as the network ships it: Cloudflare's Rocket Loader must leave it alone */
       script.setAttribute("data-cfasync", "false");
