@@ -1,10 +1,7 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import AdTag from "@/components/AdTag";
-import AdSlot from "@/components/ads/AdSlot";
-import AdRail from "@/components/ads/AdRail";
 import BlocksLink from "@/components/BlocksLink";
 import { motion, useReducedMotion } from "motion/react";
 import ThemeMark from "../ThemeMark";
@@ -174,8 +171,7 @@ export default function LibraryIndex() {
         </div>
 
         {SHELVES.map((shelf, si) => (
-          <Fragment key={shelf.id}>
-          <section className="lib__shelf" id={shelf.id} aria-labelledby={`${shelf.id}-title`}>
+          <section className="lib__shelf" id={shelf.id} key={shelf.id} aria-labelledby={`${shelf.id}-title`}>
             <header className="lib__shelfHead">
               <h2 className="lib__shelfTitle" id={`${shelf.id}-title`}>
                 {shelf.name}
@@ -190,19 +186,10 @@ export default function LibraryIndex() {
               ))}
             </ul>
           </section>
-          {/* a Native Banner in the break after the first shelf: between rows, never inside one */}
-          {si === 0 && SHELVES.length > 1 && <AdSlot unit="native" className="lib__ad" />}
-          </Fragment>
         ))}
-        {/* the leaderboard closes the list, where reading is done; it stands down below 728px */}
-        <AdSlot unit="leaderboard" className="lib__ad lib__ad--end" />
       </main>
 
-      {/* the skyscraper, only in an empty margin on a wide screen */}
-      <AdRail anchor=".lib" />
       <SiteFooter />
-      {/* the ad network, loaded only once the visitor is browsing (components/AdTag.tsx) */}
-      <AdTag />
     </div>
   );
 }

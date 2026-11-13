@@ -77,54 +77,15 @@ export default function PrivacyPage() {
       <h2>Analytics</h2>
       <p>
         Pin UI uses Vercel Web Analytics to count page views. It sets no cookies, does not follow
-        you between sites, and reports visits in aggregate rather than as individuals. There is no
-        Google Analytics on this site.
+        you between sites, and reports visits in aggregate rather than as individuals.
+        There is no Google Analytics, no advertising pixel, and no third-party tracker on this site.
       </p>
-
-      <h2>Advertising</h2>
-      <p>
-        Pin UI carries ads from{" "}
-        <a href="https://adsterra.com/privacy-policy/" target="_blank" rel="noopener noreferrer">
-          Adsterra
-        </a>
-        , in the breaks of the pages people browse and read: the landing page below its first
-        sections, the component list, a component&rsquo;s write-up once you open it, the Blocx
-        pages, the FAQ and the testimonials. The live component stages, these policies, and the
-        sponsor and waitlist pages carry none. Ads load only as you scroll near them, so they never
-        hold up what you came to see, and they cannot navigate you away from the page. Ads are
-        what keep the library free.
-      </p>
-      <ul>
-        <li>
-          The network, not Pin UI, decides which ad to show. To do that it may read your IP address,
-          browser and device details, and set or read its own cookies, including to recognise you
-          across other websites that use it.
-        </li>
-        <li>
-          Pin UI does not pass it your email, your X handle, or anything else from the waitlist,
-          and never sees what its cookies contain.
-        </li>
-        <li>
-          You can opt out of interest-based ads from participating networks at{" "}
-          <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">
-            aboutads.info
-          </a>{" "}
-          or, in Europe,{" "}
-          <a href="https://www.youronlinechoices.eu/" target="_blank" rel="noopener noreferrer">
-            youronlinechoices.eu
-          </a>
-          , and an ad blocker or your browser&rsquo;s tracking protection stops the script
-          altogether. The site works exactly the same without it.
-        </li>
-      </ul>
 
       <h2>What is kept in your own browser</h2>
       <p>
-        Pin UI itself keeps one thing: whether you chose the light or the crimson theme, saved
-        under <strong>pin-ui-theme</strong> so the site does not forget between visits. It never
-        leaves your device and is not readable by us. Clearing your site data removes it. On the
-        pages that carry ads, the advertising network may keep its own cookies as well, as
-        described above.
+        One thing: whether you chose the light or the crimson theme, saved under{" "}
+        <strong>pin-ui-theme</strong> so the site does not forget between visits. It never leaves
+        your device and is not readable by us. Clearing your site data removes it.
       </p>
       <p>
         The component demos on this site run entirely in your browser. Nothing you do with them —

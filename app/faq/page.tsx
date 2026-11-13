@@ -79,7 +79,6 @@ export default function FaqPage() {
         dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbs) }}
       />
       <LegalPage
-        ads
         title="Frequently Asked Questions"
         updated="2026-09-23"
         summary="Everything you need to know about Pin UI — what it is, how to use it, and what makes it different."

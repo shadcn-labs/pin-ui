@@ -1,10 +1,6 @@
 "use client";
 
-import { Fragment } from "react";
 import Link from "next/link";
-import AdTag from "../AdTag";
-import AdSlot from "../ads/AdSlot";
-import AdRail from "../ads/AdRail";
 import BlocxMark from "./BlocxMark";
 import BlocxFooter from "./BlocxFooter";
 import GitHubStars from "../hero/GitHubStars";
@@ -25,9 +21,6 @@ import "./blocks.css";
  */
 export default function BlocksIndex() {
   const { isSaved } = useSaved();
-  /* the Native Banner sits after the first shelf with blocks on it, when another follows (else the leaderboard closes the page alone) */
-  const filled = SHELF_ORDER.filter((category) => blocksIn(category).length > 0);
-  const firstFilled = filled.length > 1 ? filled[0] : null;
 
   return (
     <div className="blx blx--index">
@@ -51,8 +44,7 @@ export default function BlocksIndex() {
           const blocks = blocksIn(category);
           if (!blocks.length) return null;
           return (
-            <Fragment key={category}>
-            <section id={category} className="blx-shelf" aria-labelledby={`shelf-${category}`}>
+            <section key={category} id={category} className="blx-shelf" aria-labelledby={`shelf-${category}`}>
               {/* titles and cards rise as they scroll in (.pin-reveal, globals.css): never hidden waiting for script */}
               <h2 id={`shelf-${category}`} className="blx-shelf__title pin-reveal">
                 {shelfName(category)}:
@@ -66,18 +58,11 @@ export default function BlocksIndex() {
                 ))}
               </ul>
             </section>
-            {category === firstFilled && <AdSlot unit="native" className="blx-ad" />}
-            </Fragment>
           );
         })}
-        <AdSlot unit="leaderboard" className="blx-ad" />
       </main>
 
-      <AdRail anchor=".blx-shelves" />
-
       <BlocxFooter />
-      {/* the ad network, loaded only once the visitor is browsing (components/AdTag.tsx) */}
-      <AdTag />
     </div>
   );
 }
