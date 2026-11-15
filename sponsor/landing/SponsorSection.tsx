@@ -39,8 +39,8 @@ const TIERS: Tier[] = [
 
 /* who keeps Pin UI running — Figma 568:1598 at rest, 568:1681 pointed at */
 const PLATFORM = [
-  { key: "vercel", name: "Vercel", role: "Hosting Sponsor", href: "https://vercel.com", Mark: VercelMark },
-  { key: "talvess", name: "Talvess", role: "Analytics Sponsor", href: "https://talvess.vercel.app", Mark: TalvessMark },
+  { key: "vercel", name: "Vercel", role: "Hosting Sponsor", href: "https://vercel.com/", Mark: VercelMark },
+  { key: "talvess", name: "Talvess", role: "Analytics Sponsor", href: "https://talvess.app/", Mark: TalvessMark },
 ];
 
 const em = (px: number) => `${px / 16}em`;
