@@ -20,10 +20,12 @@ import { LIBRARY, thumbOf, wallOf } from "../library/registry";
  * cannot follow a compositor-only move, the clips below read each tile's
  * real place a few times a second instead.
  *
- * Only what can be seen moves. Every tile fetches its clip once it is in the frame and plays
- * only while it stays there, so the wall never decodes more than it shows. The
- * loop itself stops whenever the hero is off screen. Reduced motion, a hidden
- * tab or a data-saver hold everything still.
+ * Only what can be seen moves. A tile fetches its clip once it is in the frame,
+ * plays only while it stays there, and lets the clip go when it leaves, so the
+ * wall never holds more video than it shows — and on a phone it plays only a
+ * few tiles at once, the rest drifting by as stills. The loop itself stops
+ * whenever the hero is off screen. Reduced motion, a hidden tab or a
+ * data-saver hold everything still.
  */
 
 const COLS = 6;
@@ -106,22 +108,44 @@ export default function HeroWall() {
   }, []);
 
   /*
-   * Clips: fetched and played only while their tile is inside the frame.
+   * Clips: fetched and played only while their tile is inside the frame, and
+   * let go of again once it leaves.
    *
    * The drift runs on the compositor, where an IntersectionObserver cannot see
    * it, so a tile's place is read from the page itself — a few times a second,
-   * and on scroll, only while the hero is on screen. A playing tile is a video
-   * being decoded every frame; this keeps that to the ones in view.
+   * and on scroll, only while the hero is on screen.
+   *
+   * Two things keep this within what a phone can do. A playing tile is a
+   * video decoder, and a phone has only a handful: ask for more and the page
+   * stutters, and the clips further down it fail to start at all. So a phone
+   * plays only a few tiles at once — the ones most in view, in the rows that
+   * read strongest — and the rest of the wall drifts by as stills. And a clip
+   * that has left the frame is unloaded, not merely paused: a paused video
+   * still holds its decoder and its buffer, and the wall used to keep every
+   * clip it had ever shown.
    */
   useEffect(() => {
     const wall = wallRef.current;
     if (!wall) return;
     const videos = Array.from(wall.querySelectorAll<HTMLVideoElement>("video"));
+    /* how strongly each tile's row is drawn: the claim's rows are faint, the lower ones full */
+    const strength = new Map(
+      videos.map((video) => [video, parseFloat(video.closest<HTMLElement>(".hwall__row")?.style.opacity || "1") || 1]),
+    );
 
     const still = () =>
       reduced ||
       document.hidden ||
       (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
+
+    /* how many tiles may play at once: every one in view on a desktop, a few on a phone, fewer on a modest one */
+    const small = window.matchMedia("(max-width: 700px), (pointer: coarse)");
+    const budget = () => {
+      if (!small.matches) return Infinity;
+      const device = navigator as Navigator & { deviceMemory?: number };
+      const modest = (device.deviceMemory ?? 8) <= 4 || (navigator.hardwareConcurrency ?? 8) <= 4;
+      return modest ? 2 : 4;
+    };
 
     const play = (video: HTMLVideoElement) => {
       if (!video.getAttribute("src")) {
@@ -130,6 +154,28 @@ export default function HeroWall() {
       }
       if (video.paused) void video.play().catch(() => {});
     };
+    /* out of the frame: stop, and hand the decoder and the buffer back */
+    const release = (video: HTMLVideoElement) => {
+      if (!video.paused) video.pause();
+      if (video.getAttribute("src")) {
+        video.removeAttribute("src");
+        video.load();
+      }
+      delete video.dataset.live;
+    };
+
+    /* a clip is only shown over its still once it has frames, so one that cannot start never covers it */
+    const onPlaying = (event: Event) => {
+      (event.currentTarget as HTMLVideoElement).dataset.live = "";
+    };
+    const onGone = (event: Event) => {
+      delete (event.currentTarget as HTMLVideoElement).dataset.live;
+    };
+    for (const video of videos) {
+      video.addEventListener("playing", onPlaying);
+      video.addEventListener("emptied", onGone);
+      video.addEventListener("error", onGone);
+    }
 
     let onScreen = true;
     const sample = () => {
@@ -137,15 +183,24 @@ export default function HeroWall() {
       const top = Math.max(frame.top, 0);
       const bottom = Math.min(frame.bottom, window.innerHeight);
       const quiet = still() || !onScreen;
+      const seen: { video: HTMLVideoElement; score: number }[] = [];
       for (const video of videos) {
         const r = video.getBoundingClientRect();
         const w = Math.min(r.right, frame.right) - Math.max(r.left, frame.left);
         const h = Math.min(r.bottom, bottom) - Math.max(r.top, top);
+        const share = w > 0 && h > 0 ? (w * h) / (r.width * r.height || 1) : 0;
         /* in view: at least a fiftieth of the tile is inside the frame */
-        const seen = w > 0 && h > 0 && (w * h) / (r.width * r.height || 1) > 0.02;
-        if (seen && !quiet) play(video);
+        if (share > 0.02 && !quiet) seen.push({ video, score: share * (strength.get(video) ?? 1) });
+        else if (!onScreen || share <= 0.02) release(video);
         else if (!video.paused) video.pause();
       }
+      /* the ones already playing keep their place, so tiles do not trade off with every sample */
+      seen.sort((a, b) => Number(a.video.paused) - Number(b.video.paused) || b.score - a.score);
+      const allowed = budget();
+      seen.forEach(({ video }, i) => {
+        if (i < allowed) play(video);
+        else if (!video.paused) video.pause();
+      });
     };
 
     let queued = 0;
@@ -172,12 +227,19 @@ export default function HeroWall() {
     sample();
     window.addEventListener("scroll", onScroll, { passive: true });
     document.addEventListener("visibilitychange", sample);
+    small.addEventListener("change", sample);
     return () => {
       window.clearInterval(timer);
       cancelAnimationFrame(queued);
       visibility?.disconnect();
       window.removeEventListener("scroll", onScroll);
       document.removeEventListener("visibilitychange", sample);
+      small.removeEventListener("change", sample);
+      for (const video of videos) {
+        video.removeEventListener("playing", onPlaying);
+        video.removeEventListener("emptied", onGone);
+        video.removeEventListener("error", onGone);
+      }
     };
   }, [reduced, passes]);
 

@@ -190,10 +190,26 @@ html[data-pin-scroll="smooth"] {
   transition: transform 0.5s cubic-bezier(0.22, 0.68, 0.16, 1);
 }
 
-/* the clip lies over its still; until it has frames it paints nothing, so the still shows through */
+/*
+ * The clip lies over its still, and is only drawn once it is really playing
+ * (ComponentCard marks it). A video with no frames is not always transparent:
+ * a phone that has run out of decoders paints it black, over the still. So
+ * until it plays it is not shown at all.
+ */
 .card__clip {
   position: absolute;
   inset: 0;
+  /* the still under it is the backdrop; the image's own black must not sit over it */
+  background: transparent;
+  opacity: 0;
+  /* the fade in, and the hover lift .card__video gives every preview */
+  transition:
+    opacity 0.3s ease,
+    transform 0.5s cubic-bezier(0.22, 0.68, 0.16, 1);
+}
+
+.card__clip[data-live] {
+  opacity: 1;
 }
 
 .card__foot {

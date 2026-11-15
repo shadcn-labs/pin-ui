@@ -204,10 +204,21 @@
   object-fit: cover;
 }
 
-/* the clip lies over the tile's still and paints nothing until it has frames */
+/*
+ * The clip lies over the tile's still, and is only drawn once it is really
+ * playing (HeroWall marks it). A browser is not obliged to leave a video with
+ * no frames transparent — a phone that has run out of decoders paints it
+ * black — so until then it is simply not shown, and the still is.
+ */
 .hwall__clip {
   position: absolute;
   inset: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.hwall__clip[data-live] {
+  opacity: 1;
 }
 
 /*
@@ -264,6 +275,18 @@
   --haze-to: 100%;
   -webkit-backdrop-filter: blur(2.5px);
   backdrop-filter: blur(2.5px);
+}
+
+/*
+ * On a phone the haze is the wash alone. A backdrop blur is recomputed for
+ * everything under it on every frame, and under this one is a wall of drifting
+ * video: three of them cost a phone's GPU more than the whole rest of the hero,
+ * for a softening of a few pixels that is hard to make out at that size.
+ */
+@media (max-width: 700px), (pointer: coarse) {
+  .hero__haze span {
+    display: none;
+  }
 }
 
 /* the wash: the frame's colour, eased in over the lowest stretch and kept light */

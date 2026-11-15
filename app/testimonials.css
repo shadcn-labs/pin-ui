@@ -163,6 +163,19 @@
 }
 
 /*
+ * No edge blur on a phone. There the row's cards stand open at their full
+ * height, so each edge would be three backdrop blurs the height of the whole
+ * row, recomputed every frame the row drifts — the single most expensive
+ * thing on the page for a phone's GPU, to soften a strip a few pixels wide.
+ * The cards simply run off the screen's edge, as a carousel does.
+ */
+@media (max-width: 700px), (pointer: coarse) {
+  .tq__edge {
+    display: none;
+  }
+}
+
+/*
  * On a touch screen the row's cards carry their quotes openly (set like the
  * page's), so the row is as tall as its tallest card and needs no room kept
  * under it; the blur runs its full height.

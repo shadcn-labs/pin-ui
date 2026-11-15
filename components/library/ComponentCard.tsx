@@ -18,6 +18,13 @@ import CreatorDot from "./CreatorDot";
  * scroll past and it stops, so a long page never has more than the few clips
  * you can see decoding at once.
  *
+ * A card that scrolls well away gives its clip back — unloaded, not just
+ * paused. A paused video still holds a decoder and its buffer, and a phone
+ * has only a handful of decoders: a long shelf that kept every clip it had
+ * shown would run out, and the cards further down would never start. The clip
+ * is also only drawn over the still once it is really playing, so one that
+ * cannot start leaves the still showing instead of an empty box.
+ *
  * Nothing moves for someone who has asked for reduced motion, or who has
  * asked the browser to save data; a hidden tab pauses everything.
  */
@@ -45,6 +52,8 @@ export default function ComponentCard({
   const videoRef = useRef<HTMLVideoElement>(null);
   const cellRef = useRef<HTMLElement>(null);
   const [near, setNear] = useState(false);
+  /* the clip has frames on screen: only then is it drawn over the still */
+  const [live, setLive] = useState(false);
   /* on screen: at least a third of the preview is showing */
   const visible = useRef(false);
 
@@ -74,15 +83,17 @@ export default function ComponentCard({
       return;
     }
 
-    /* fetch the clip once the card is within a screen of the viewport */
+    /*
+     * Hold the clip while the card is near the viewport, and let it go beyond
+     * that: within a screen either way on a desktop, a third of one on a phone,
+     * where a column of cards is tall and every held clip is a decoder.
+     */
+    const reach = window.matchMedia("(max-width: 700px), (pointer: coarse)").matches ? "35% 0px" : "100% 0px";
     const loader = new IntersectionObserver(
       (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          setNear(true);
-          loader.disconnect();
-        }
+        for (const e of entries) setNear(e.isIntersecting);
       },
-      { rootMargin: "100% 0px" },
+      { rootMargin: reach },
     );
 
     /* and play it only while it is really in view */
@@ -103,6 +114,24 @@ export default function ComponentCard({
       document.removeEventListener("visibilitychange", sync);
     };
   }, [sync]);
+
+  /* the face turned away holds no clip either: it takes it up again when it is turned back */
+  const held = near && !hidden;
+
+  /*
+   * Letting go. Dropping the `src` attribute alone leaves the old media
+   * loaded; `load()` is what actually frees the decoder and the buffer.
+   */
+  useEffect(() => {
+    const video = videoRef.current;
+    if (held || !video) return;
+    if (!video.paused) video.pause();
+    if (video.currentSrc || video.getAttribute("src")) {
+      video.removeAttribute("src");
+      video.load();
+    }
+    setLive(false);
+  }, [held]);
 
   return (
     /*
@@ -144,14 +173,18 @@ export default function ComponentCard({
             <video
               className="card__video card__clip"
               ref={videoRef}
-              src={near ? entry.clip : undefined}
+              src={held ? entry.clip : undefined}
+              data-live={live || undefined}
               style={{ "--card-zoom": entry.zoom } as React.CSSProperties}
               muted
               playsInline
               loop
               /* the source arrives after the card was already in view: start it then */
               onLoadedData={sync}
-              preload={near ? "auto" : "none"}
+              onPlaying={() => setLive(true)}
+              onEmptied={() => setLive(false)}
+              onError={() => setLive(false)}
+              preload={held ? "auto" : "none"}
               tabIndex={-1}
               aria-hidden="true"
             />

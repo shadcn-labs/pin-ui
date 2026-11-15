@@ -525,6 +525,12 @@
   position: relative;
   display: grid;
   place-items: center;
+  /*
+   * One column, exactly the frame's width. Left implicit it is sized `auto`,
+   * which grows to a component's widest unbreakable content: on a phone that
+   * made the column wider than the frame, and the component ran off its edge.
+   */
+  grid-template-columns: minmax(0, 1fr);
   flex: 0 0 auto;
   width: 100%;
   height: 100%;
