@@ -6,6 +6,7 @@ import { LINKS } from "@/lib/links";
 import { SITE_URL } from "@/lib/site";
 import FaviconSync from "@/components/FaviconSync";
 import BlocxGate from "@/components/BlocxGate";
+import StarToast from "@/components/StarToast";
 import NoFlashScript from "@/components/NoFlashScript";
 import {
   DEFAULT_THEME,
@@ -227,6 +228,8 @@ export default function RootLayout({
         {children}
         {/* the way in to Blocx: lives here so it survives the change of page */}
         <BlocxGate />
+        {/* "Liking Pin UI so far?": a star and a follow, asked once a visit on the browsing pages */}
+        <StarToast />
         {/*
           Vercel Web Analytics: page views counted in aggregate, with no cookies
           and no cross-site tracking. It only reports from a Vercel deployment —

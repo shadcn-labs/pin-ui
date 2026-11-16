@@ -1,1 +1,1 @@
-Pin UI — Components worth building with. The Pin UI logo beside a glowing red star, with two dotted hands making a peace sign and an OK sign. Designed and built by Rachit Thakur.
+Pin UI — part of Shadcn Labs. The red Pin UI logo on white, between soft red stars and faint pixel-art flowers, with "Created by Rachit Thakur" in the corner.

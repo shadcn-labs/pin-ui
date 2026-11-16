@@ -1,0 +1,211 @@
+/* ===========================================================================
+   Star toast (StarToast.tsx).
+
+   A small card in the corner: the mark, a question, a line, and two answers.
+   It follows the site's theme — a white card on the light site, a near-black
+   one on the crimson — and the Star button is the brand red in both. On a
+   phone it spans the width above the screen's bottom edge, clear of the
+   home indicator.
+=========================================================================== */
+
+/*
+ * The dock the card slides through. It sits in the corner and clips, so the
+ * card can come in from past the screen's edge without ever standing outside
+ * the page; its padding is the card's margin from the edges, with room above
+ * and beside for the shadow. It takes no presses of its own.
+ */
+.stoast-dock {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  z-index: 900;
+  display: flex;
+  justify-content: flex-end;
+  padding: 48px 20px 20px 48px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.stoast-dock:empty {
+  display: none;
+}
+
+.stoast {
+  pointer-events: auto;
+  --stoast-bg: #ffffff;
+  --stoast-ink: #0a0a0a;
+  --stoast-muted: rgb(10 10 10 / 0.6);
+  --stoast-edge: rgb(10 10 10 / 0.08);
+  --stoast-shadow: 0 24px 48px -16px rgb(0 0 0 / 0.22), 0 4px 12px -4px rgb(0 0 0 / 0.08);
+  --stoast-soft: #f1f1f2;
+  --stoast-soft-hover: #e7e7e9;
+  --stoast-soft-ink: #0a0a0a;
+
+  position: relative;
+  width: 320px;
+  padding: 16px 16px 16px;
+  border: 1px solid var(--stoast-edge);
+  border-radius: 18px;
+  background: var(--stoast-bg);
+  color: var(--stoast-ink);
+  box-shadow: var(--stoast-shadow);
+  font-family: var(--pin-font);
+  -webkit-font-smoothing: antialiased;
+}
+
+:root[data-pin-theme="crimson"] .stoast {
+  --stoast-bg: #121212;
+  --stoast-ink: #ffffff;
+  --stoast-muted: rgb(255 255 255 / 0.62);
+  --stoast-edge: rgb(255 255 255 / 0.09);
+  --stoast-shadow: 0 24px 56px -16px rgb(0 0 0 / 0.8);
+  --stoast-soft: #222224;
+  --stoast-soft-hover: #2c2c2f;
+  --stoast-soft-ink: #ffffff;
+}
+
+.stoast__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.stoast__mark {
+  width: 26px;
+  height: auto;
+}
+
+.stoast__close {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin: -4px -4px 0 0;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--stoast-muted);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.stoast__close svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.stoast__title {
+  margin: 0 0 6px;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.stoast__copy {
+  margin: 0 0 16px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--stoast-muted);
+}
+
+.stoast__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.stoast__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 42px;
+  padding: 0 14px;
+  border-radius: 11px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.15s ease, transform 0.12s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.stoast__btn:active {
+  transform: scale(0.97);
+}
+
+.stoast__btn--follow {
+  background: var(--stoast-soft);
+  color: var(--stoast-soft-ink);
+}
+
+.stoast__btn--star {
+  background: var(--pin-red);
+  color: #ffffff;
+}
+
+.stoast__icon {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  fill: currentColor;
+}
+
+.stoast__count {
+  padding-left: 7px;
+  border-left: 1px solid rgb(255 255 255 / 0.35);
+  font-variant-numeric: tabular-nums;
+  opacity: 0.9;
+}
+
+.stoast__close:focus-visible,
+.stoast__btn:focus-visible {
+  outline: 2px solid var(--pin-red);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .stoast__close:hover {
+    background: var(--stoast-soft);
+    color: var(--stoast-ink);
+  }
+
+  .stoast__btn--follow:hover {
+    background: var(--stoast-soft-hover);
+  }
+
+  .stoast__btn--star:hover {
+    background: #c9001f;
+  }
+}
+
+/* a phone: the width of the screen, above its bottom edge and the home indicator */
+@media (max-width: 520px) {
+  .stoast-dock {
+    left: 0;
+    padding: 48px 12px calc(12px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .stoast {
+    flex: 1 1 auto;
+    width: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stoast__btn {
+    transition: background-color 0.15s ease;
+  }
+
+  .stoast__btn:active {
+    transform: none;
+  }
+}
