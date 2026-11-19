@@ -1,8 +1,9 @@
 import type React from "react";
+import { Suspense } from "react";
 import PageBar from "@/components/PageBar";
 import SiteFooter from "@/components/hero/SiteFooter";
 import PlanCheckout from "./PlanCheckout";
-import { LINKS } from "@/lib/links";
+import CheckoutNotice from "./CheckoutNotice";
 import type { SponsorPlan } from "@/sponsor/plans";
 import glow from "@/sponsor/assets/glow.webp";
 import "@/components/library/library.css";
@@ -71,15 +72,6 @@ const PLANS: Plan[] = [
   },
 ];
 
-/* what the page says when it is sent back here instead of to the checkout */
-const NOTICES = {
-  unavailable: "Checkout isn't open yet. Please try again soon, or write to us at ",
-  error: "We couldn't open the checkout just now. Please try again, or write to us at ",
-  busy: "Too many tries in a row. Wait a minute and try again, or write to us at ",
-} as const;
-
-export type CheckoutNotice = keyof typeof NOTICES;
-
 function Check() {
   return (
     <svg className="sp__check" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false">
@@ -88,7 +80,7 @@ function Check() {
   );
 }
 
-export default function SponsorPage({ notice }: { notice?: CheckoutNotice | null }) {
+export default function SponsorPage() {
   return (
     <div className="site lib-page sp-page">
       <PageBar />
@@ -103,12 +95,10 @@ export default function SponsorPage({ notice }: { notice?: CheckoutNotice | null
           </p>
         </header>
 
-        {notice && (
-          <p className="sp__notice" role="alert">
-            {NOTICES[notice]}
-            <a href={`mailto:${LINKS.email}`}>{LINKS.email}</a>.
-          </p>
-        )}
+        {/* why a checkout did not open, read from the address in the browser: the page itself stays static */}
+        <Suspense fallback={null}>
+          <CheckoutNotice />
+        </Suspense>
 
         <ul className="sp__plans">
           {PLANS.map((plan, i) => (

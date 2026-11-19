@@ -72,6 +72,7 @@ const FACES: Record<string, string | null> = {
   "search-card": "Inter (400 to 600)",
   "theme-switch": null,
   "presence-cards": "Inter (300 to 700)",
+  "sling-slider": "Inter (400) for the reading and the hint",
   "reader-card":
     "Newsreader (variable, with its optical-size axis, and italic) for the titles and the reader, Times New Roman for the card's excerpt (Tinos where it is missing) and Inter for the small labels. The stylesheet reads --font-newsreader and --font-tinos when they are set, as next/font sets them, and otherwise falls back to faces named \"Newsreader\" and \"Tinos\"",
   "copy-paste-pad": "Inter (400 and 500) for the overlays, with Varela Round for the keycap legends (Arial Rounded where it is missing)",

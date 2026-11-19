@@ -48,6 +48,7 @@ const SearchCard = dynamic(() => import("./SearchCard"));
 const ReaderCard = dynamic(() => import("./ReaderCard"));
 const ThemeSwitch = dynamic(() => import("./ThemeSwitch"));
 const PresenceCards = dynamic(() => import("./PresenceCards"));
+const SlingSlider = dynamic(() => import("./SlingSlider"));
 
 /**
  * The stage — Figma 345:21.
@@ -150,6 +151,7 @@ export default function WorkbenchStage({
           {entry.slug === "search-card" && <SearchCard theme={theme} />}
           {entry.slug === "reader-card" && <ReaderCard theme={theme} fill />}
           {entry.slug === "presence-cards" && <PresenceCards theme={theme} fill />}
+          {entry.slug === "sling-slider" && <SlingSlider theme={theme} />}
           {/* the switch is real: once its effect has covered the scene, the site's own theme follows */}
           {entry.slug === "theme-switch" && (
             <ThemeSwitch

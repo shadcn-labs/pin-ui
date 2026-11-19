@@ -1,4 +1,4 @@
-import type { Transition, Variants } from "motion/react";
+import type { Transition } from "motion/react";
 
 /**
  * Motion tokens. Everything in Pin UI animates on a spring — no duration-based
@@ -48,34 +48,6 @@ export const bouncySpring: Transition = {
   damping: 18,
   mass: 0.6,
 };
-
-/** Card shell: rises, unblurs, and hands off to its children. */
-export const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 28, scale: 0.96, filter: "blur(10px)" },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    filter: "blur(0px)",
-    transition: { ...softSpring, staggerChildren: 0.055, delayChildren: 0.1 },
-  },
-};
-
-/** Every direct child of the card rides this. */
-export const rowVariants: Variants = {
-  hidden: { opacity: 0, y: 14, filter: "blur(6px)" },
-  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: spring },
-};
-
-/** Content that swaps in place (form <-> success). */
-export const swapVariants: Variants = {
-  hidden: { opacity: 0, y: 10, scale: 0.98 },
-  visible: { opacity: 1, y: 0, scale: 1, transition: softSpring },
-  exit: { opacity: 0, y: -10, scale: 0.98, transition: { ...spring, damping: 40 } },
-};
-
-/** Invalid-field nudge. */
-export const shake = { x: [0, -7, 6, -4, 3, 0] };
 
 /**
  * A copy button's icon swap. Feedback for a click has to land on the click:

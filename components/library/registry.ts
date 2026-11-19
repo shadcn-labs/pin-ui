@@ -163,6 +163,52 @@ export type Entry = {
 
 const ENTRIES: Entry[] = [
   {
+    slug: "sling-slider",
+    category: "controls",
+    name: "Sling Slider",
+    tagline: "A slider you can drag, or sling: pull the ball back and let it fly to the value.",
+    blurb:
+      "A range drawn as thin bars, solid up to the value and faint after it, with a red ball on the tip of the last solid bar. Drag the bars and the head leans with your speed while every bar you pass springs up and settles. Or grab the ball and pull it back like a slingshot: a dashed arc shows exactly where it will land and the reading turns red with the value it will land on, then let go and it flies along that arc and bounces into place.",
+    highlights: ["Aim, then sling", "A spring in every bar", "Fixed-step physics", "Fits any width"],
+    /* a recording of the live slider in its dark theme: dragging the bars, then slinging the ball */
+    clip: "/clips/loop/sling-slider.mp4",
+    poster: "/clips/loop/sling-slider.jpg",
+    sound: false,
+    /* the recording leaves wide field around the slider: 1.5 brings it forward and keeps the arc in */
+    zoom: 1.5,
+    stage: "#f4f3ef",
+    stageDark: "#111111",
+    clipStage: "#111111",
+    /* 59 bars and the reading are nearly 700px: it gets the room it was drawn in, and scales down below that */
+    wide: true,
+    /* a ball pulled back past either end of the track is drawn outside the slider's box: the stage shows it */
+    spill: true,
+    /* plain React and requestAnimationFrame: nothing to install */
+    dependencies: [],
+    usage: `import SlingSlider from "@/components/library/SlingSlider";
+
+<SlingSlider defaultValue={36} onChange={setValue} />`,
+    props: [
+      { name: "defaultValue", type: "number", fallback: "36", note: "Where it starts, from 0 to 100." },
+      { name: "onChange", type: "(value: number) => void", note: "Called with every whole-number change: while dragging, while the ball flies, and on each key press." },
+      { name: "label", type: "string", fallback: "\"Value\"", note: "The slider's accessible name, read out with its value." },
+      { name: "theme", type: "\"light\" | \"dark\"", fallback: "\"dark\"", note: "Ink and red on warm paper, or white and red on near-black. It draws no ground of its own." },
+      { name: "hint", type: "boolean", fallback: "true", note: "The line under it saying how to drag and how to sling." },
+    ],
+    files: [
+      { name: "SlingSlider.tsx", lang: "tsx" },
+      { name: "sling-slider.css", lang: "css" },
+    ],
+    info: {
+      paragraphs: [
+        "Every bar is a damped spring with a position and a velocity. Bars the value crosses get a push from its speed and overshoot once or twice before settling, so a fast drag leaves a wake behind your hand; a faint bar turning solid is a second, stiffer spring, so it pops rather than swaps. The head bar leans into the value's speed, and the physics runs in fixed 1/240s steps, so a 60Hz and a 120Hz screen behave the same and a stiff spring can never blow up on one long frame.",
+        "The sling is aimed, not flung. A throw read from your last few pointer events lands somewhere different every time; a pull is a position, so it can be previewed and trusted. Pull further for further and down for a higher lob: the arc is solved so the ball peaks just above the higher end and comes down exactly on the tip of the bar that will be the head, and that is the value you get. The landing presses the bars under it down, most at the centre, and the ball hops to rest. A short pull, or Escape, puts it back.",
+        "Everything that moves is written straight to the DOM from one requestAnimationFrame loop, which sleeps when nothing is moving: React renders once. The arrow keys step it by one, Shift by ten, Home and End jump to the ends, and with reduced motion it simply moves.",
+      ],
+    },
+    origin: { label: "Folder · Sling Slider" },
+  },
+  {
     slug: "presence-cards",
     category: "cards",
     name: "Presence Cards",

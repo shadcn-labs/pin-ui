@@ -6,7 +6,7 @@ import SponsorRoute, { metadata as sponsorMetadata } from "@/sponsor/page/Sponso
 /* /sponsor — the page itself lives in sponsor/page; this only answers to the switch (sponsor/config.ts) */
 export const metadata: Metadata = SPONSOR_ENABLED ? sponsorMetadata : {};
 
-export default function Page(props: Parameters<typeof SponsorRoute>[0]) {
+export default function Page() {
   if (!SPONSOR_ENABLED) notFound();
-  return <SponsorRoute {...props} />;
+  return <SponsorRoute />;
 }
