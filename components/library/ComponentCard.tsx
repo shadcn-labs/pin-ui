@@ -4,7 +4,7 @@ import type React from "react";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "motion/react";
-import { thumbOf, type Entry } from "./registry";
+import { thumbOf, wallOf, type Entry } from "./registry";
 import CreatorDot from "./CreatorDot";
 
 /**
@@ -119,6 +119,22 @@ export default function ComponentCard({
   const held = near && !hidden;
 
   /*
+   * On a phone the card is about 340px wide, so the 960px loop is mostly
+   * thrown away: it plays the 640px copy the hero wall uses instead (still
+   * sharp at 2x), 27–61% fewer bytes a clip. Decided after mount, which is
+   * before any clip is fetched — a card holds none until it comes near.
+   */
+  const [phone, setPhone] = useState(false);
+  useEffect(() => {
+    const small = window.matchMedia("(max-width: 700px)");
+    const sync = () => setPhone(small.matches);
+    sync();
+    small.addEventListener("change", sync);
+    return () => small.removeEventListener("change", sync);
+  }, []);
+  const clip = entry.clip && (phone ? wallOf(entry.clip) : entry.clip);
+
+  /*
    * Letting go. Dropping the `src` attribute alone leaves the old media
    * loaded; `load()` is what actually frees the decoder and the buffer.
    */
@@ -173,7 +189,7 @@ export default function ComponentCard({
             <video
               className="card__video card__clip"
               ref={videoRef}
-              src={held ? entry.clip : undefined}
+              src={held ? clip : undefined}
               data-live={live || undefined}
               style={{ "--card-zoom": entry.zoom } as React.CSSProperties}
               muted

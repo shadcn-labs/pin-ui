@@ -1,5 +1,5 @@
 import "server-only";
-import { LIBRARY, type Entry } from "@/components/library/registry";
+import { FULL_LIBRARY, type FullEntry } from "@/components/library/registry-docs";
 import { readLibrarySource } from "./source";
 
 /**
@@ -78,7 +78,7 @@ const FACES: Record<string, string | null> = {
   "copy-paste-pad": "Inter (400 and 500) for the overlays, with Varela Round for the keycap legends (Arial Rounded where it is missing)",
 };
 
-function docsFor(entry: Entry): string {
+function docsFor(entry: FullEntry): string {
   const face = entry.slug in FACES ? FACES[entry.slug] : "Inter";
   const lines = [
     `${entry.name} — ${entry.tagline}`,
@@ -212,7 +212,7 @@ function docsFor(entry: Entry): string {
   return lines.join("\n");
 }
 
-export async function buildRegistryItem(entry: Entry): Promise<RegistryItem> {
+export async function buildRegistryItem(entry: FullEntry): Promise<RegistryItem> {
   const files = await Promise.all(
     entry.files.map(async (file): Promise<RegistryFile> => {
       const target = `${INSTALL_DIR}/${file.name}`;
@@ -245,6 +245,6 @@ export async function buildRegistryIndex() {
     $schema: "https://ui.shadcn.com/schema/registry.json",
     name: "pin-ui",
     homepage: "https://pinui.xyz",
-    items: await Promise.all(LIBRARY.map(buildRegistryItem)),
+    items: await Promise.all(FULL_LIBRARY.map(buildRegistryItem)),
   };
 }

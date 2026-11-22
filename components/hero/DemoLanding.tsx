@@ -38,8 +38,17 @@ export default function DemoLanding() {
       <LazyHydrate>
         <Testimonials />
       </LazyHydrate>
-      {/* parked until sponsor/config.ts switches it on */}
-      {SPONSOR_ENABLED && <SponsorSection />}
+      {/*
+        Parked until sponsor/config.ts switches it on. Far below the first
+        screen, like the sections around it: server-rendered for everyone,
+        hydrated only as it comes near, so React's work on its markup is not
+        part of the page's start-up.
+      */}
+      {SPONSOR_ENABLED && (
+        <LazyHydrate>
+          <SponsorSection />
+        </LazyHydrate>
+      )}
       <LazyHydrate>
         <SiteFooter />
       </LazyHydrate>

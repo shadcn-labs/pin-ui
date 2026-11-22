@@ -243,3 +243,18 @@ export function categoryName(id: BlockCategoryId): string {
 export function shelfName(id: BlockCategoryId): string {
   return BLOCK_CATEGORIES.find((c) => c.id === id)?.shelf ?? id;
 }
+
+/*
+ * A Blocx card's picture at three widths (scripts/make-block-thumbs.py makes the
+ * smaller two). Cards show it at roughly 285-400 CSS px, so a browser takes the
+ * 480 or 640 copy on most screens and the full 960 only on a 3x phone or a wide
+ * desktop card.
+ */
+export function blockThumbSrcSet(thumb: string): string {
+  const query = thumb.match(/\?.*$/)?.[0] ?? "";
+  const base = thumb.replace(/\.webp(\?.*)?$/, "");
+  return `${base}-480.webp${query} 480w, ${base}-640.webp${query} 640w, ${thumb} 960w`;
+}
+
+/* a card is nearly the screen's width on a phone, and at most about 400px beside others */
+export const BLOCK_THUMB_SIZES = "(max-width: 700px) 86vw, 400px";

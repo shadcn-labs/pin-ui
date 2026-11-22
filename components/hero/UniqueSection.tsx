@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import ComponentCard from "../library/ComponentCard";
 import ViewAllCard from "./ViewAllCard";
 import { LANDING_SHOWN, LIBRARY } from "../library/registry";
-import { BLOCKS, type Block } from "@/lib/blocks";
+import { BLOCKS, BLOCK_THUMB_SIZES, blockThumbSrcSet, type Block } from "@/lib/blocks";
 
 /**
  * The shelf under the hero — Figma 580:300 (Components) and 580:403 (Blocx).
@@ -199,6 +199,8 @@ function BlockCard({ block }: { block: Block }) {
           <img
             className="card__video card__thumb"
             src={block.thumb}
+            srcSet={blockThumbSrcSet(block.thumb)}
+            sizes={BLOCK_THUMB_SIZES}
             alt=""
             width={960}
             height={756}

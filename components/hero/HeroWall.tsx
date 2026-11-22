@@ -79,10 +79,30 @@ export default function HeroWall() {
         track.style.animationDuration = `${span / SPEEDS[r]}s`;
       });
     };
-    measure();
+    /*
+     * Not during start-up. The first measure adds the copies the seamless loop
+     * needs — a second render of the wall and a layout of it — and doing that
+     * the moment the page hydrates made the start-up's longest task longer
+     * still. The server's single pass already fills the frame, so the copies
+     * can wait for the first idle moment; the drift only starts once they exist.
+     * The observer starts then too: observing measures at once, which would
+     * bring the same work straight back into start-up.
+     */
     const observer = new ResizeObserver(measure);
-    observer.observe(wall);
-    return () => observer.disconnect();
+    type Idle = (callback: () => void, options?: { timeout: number }) => number;
+    const idle: Idle = window.requestIdleCallback ?? ((callback) => window.setTimeout(callback, 1));
+    const cancel: (handle: number) => void = window.cancelIdleCallback ?? window.clearTimeout;
+    const first = idle(
+      () => {
+        measure();
+        observer.observe(wall);
+      },
+      { timeout: 600 },
+    );
+    return () => {
+      cancel(first);
+      observer.disconnect();
+    };
   }, []);
 
   /*

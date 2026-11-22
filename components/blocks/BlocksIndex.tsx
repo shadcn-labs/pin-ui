@@ -6,7 +6,7 @@ import BlocxFooter from "./BlocxFooter";
 import GitHubStars from "../hero/GitHubStars";
 import { IconArrowLeft, IconArrowUpRight, IconBookmark } from "./icons";
 import { useSaved } from "./useSaved";
-import { SHELF_ORDER, blocksIn, shelfName, type Block } from "@/lib/blocks";
+import { BLOCK_THUMB_SIZES, SHELF_ORDER, blockThumbSrcSet, blocksIn, shelfName, type Block } from "@/lib/blocks";
 import "./blocks.css";
 
 
@@ -75,6 +75,8 @@ function BlockCard({ block, saved, priority = false }: { block: Block; saved: bo
         <img
           className="blx-card__img"
           src={block.thumb}
+          srcSet={blockThumbSrcSet(block.thumb)}
+          sizes={BLOCK_THUMB_SIZES}
           alt=""
           width={960}
           height={756}

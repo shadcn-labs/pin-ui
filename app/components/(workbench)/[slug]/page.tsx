@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { type CodePane } from "@/components/library/CodeBlock";
 import WorkbenchStage from "@/components/library/WorkbenchStage";
-import { LIBRARY, bySlug } from "@/components/library/registry";
+import { LIBRARY } from "@/components/library/registry";
+import { fullBySlug } from "@/components/library/registry-docs";
 import { readLibrarySource } from "@/lib/source";
 import { SITE_URL } from "@/lib/site";
 import { componentJsonLd, safeJsonLd } from "@/lib/jsonld";
@@ -17,7 +18,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const entry = bySlug((await params).slug);
+  const entry = fullBySlug((await params).slug);
   if (!entry) return { title: "Pin UI" };
   return {
     title: `${entry.name} — Pin UI`,
@@ -28,7 +29,8 @@ export async function generateMetadata({
 
 export default async function ComponentPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const entry = bySlug(slug);
+  /* the full entry, docs and all: read here on the server and handed to the stage as a prop */
+  const entry = fullBySlug(slug);
   if (!entry) notFound();
 
   /*

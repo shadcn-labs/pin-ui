@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Caveat, Manrope, Newsreader, Tinos } from "next/font/google";
 import { LINKS } from "@/lib/links";
 import { SITE_URL } from "@/lib/site";
@@ -236,10 +237,18 @@ export default function RootLayout({
           in development it stays in debug mode and sends nothing.
         */}
         <Analytics />
+        {/*
+          Vercel Speed Insights: Core Web Vitals (LCP, INP, CLS, TTFB) from real
+          visits, reported at p75 per page — the field data the lab tests stand
+          in for. No cookies. It only reports from a Vercel deployment, once
+          Speed Insights is switched on for the project.
+        */}
+        <SpeedInsights />
         <Script
           src="https://talvess.vercel.app/script.js"
           data-website-id="2043c2d9-4be2-4309-be82-d112d8a108ea"
-          strategy="afterInteractive"
+          /* analytics waits until the page itself has finished loading and gone idle */
+          strategy="lazyOnload"
         />
       </body>
     </html>

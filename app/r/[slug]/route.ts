@@ -1,4 +1,5 @@
-import { LIBRARY, bySlug } from "@/components/library/registry";
+import { LIBRARY } from "@/components/library/registry";
+import { fullBySlug } from "@/components/library/registry-docs";
 import { buildRegistryIndex, buildRegistryItem } from "@/lib/registryItem";
 
 /**
@@ -36,7 +37,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ slu
     return Response.json(await buildRegistryIndex(), { headers });
   }
 
-  const entry = bySlug(name);
+  const entry = fullBySlug(name);
   if (!entry) {
     return Response.json(
       { error: `unknown component: ${name}`, available: LIBRARY.map((item) => item.slug) },

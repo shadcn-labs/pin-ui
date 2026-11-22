@@ -7,7 +7,7 @@ import InstallBlock from "./InstallBlock";
 import ChipsEditor, { type ChipsSettings } from "./ChipsEditor";
 import RequestChip from "./RequestChip";
 import StageBar from "./StageBar";
-import type { Entry } from "./registry";
+import type { FullEntry } from "./registry-docs";
 import { LINKS } from "@/lib/links";
 import { setTheme as setSiteTheme, usePinTheme } from "@/lib/theme";
 
@@ -66,7 +66,7 @@ export default function WorkbenchStage({
   panes,
   registryUrl,
 }: {
-  entry: Entry;
+  entry: FullEntry;
   panes: CodePane[];
   /** Where `/r/<slug>.json` lives, resolved on the server from the site URL. */
   registryUrl: string;
