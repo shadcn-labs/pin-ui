@@ -49,6 +49,7 @@ const ReaderCard = dynamic(() => import("./ReaderCard"));
 const ThemeSwitch = dynamic(() => import("./ThemeSwitch"));
 const PresenceCards = dynamic(() => import("./PresenceCards"));
 const SlingSlider = dynamic(() => import("./SlingSlider"));
+const CoverDrop = dynamic(() => import("./CoverDrop"));
 
 /**
  * The stage — Figma 345:21.
@@ -152,6 +153,7 @@ export default function WorkbenchStage({
           {entry.slug === "reader-card" && <ReaderCard theme={theme} fill />}
           {entry.slug === "presence-cards" && <PresenceCards theme={theme} fill />}
           {entry.slug === "sling-slider" && <SlingSlider theme={theme} />}
+          {entry.slug === "cover-drop" && <CoverDrop theme={theme} showEffects />}
           {/* the switch is real: once its effect has covered the scene, the site's own theme follows */}
           {entry.slug === "theme-switch" && (
             <ThemeSwitch

@@ -43,7 +43,8 @@ CLAUDE.md
 /*.zip
 /Comp1/
 /Theme/
-/Presence Cards/
+
+# the standalone projects each library component was ported from, each with
+# its demo recording (sources/components/<Name>/), and the OG artwork's source
+/sources/
 /export-*.mp4
-/Sling Slider/
-/Meta.png

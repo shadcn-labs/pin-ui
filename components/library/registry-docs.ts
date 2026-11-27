@@ -46,6 +46,38 @@ export type EntryDocs = {
 export type FullEntry = Entry & EntryDocs;
 
 const DOCS: Record<string, EntryDocs> = {
+  "cover-drop": {
+    tagline: "A cover field you fill by dropping a photo in, and the photo rebuilds itself grain by grain.",
+    blurb:
+      "A cover field with a row of photos under it. Drag one up into the field, or just tap it, and it breaks into thousands of grains that fly up and settle into the cover, each one landing on the cell of the picture it came from. Take the cover off and the same grains fly back into the photo's empty slot. A picture dragged in from your desktop works too.",
+    highlights: ["One grain per pixel cell", "Drag, tap or drop a file", "Three effects", "Reverses into its slot"],
+    /* plain React and a 2D canvas: nothing to install */
+    dependencies: [],
+    usage: `import CoverDrop from "@/components/library/CoverDrop";
+
+<CoverDrop effect="burst" onChange={setCover} />`,
+    props: [
+      { name: "effect", type: "\"grain\" | \"burst\" | \"drift\"", fallback: "\"burst\"", note: "How the grains travel: a wave out from where you let go, a shatter that hangs and is pulled home, or a sweep laid down left to right." },
+      { name: "photos", type: "{ id, alt, src, thumb? }[]", note: "The photos in the row; four read best. src is the cover and is sampled for the grains, thumb is the small copy for the row. Defaults to four Unsplash landscapes." },
+      { name: "onChange", type: "(cover: { src, alt } | null) => void", note: "Called once a new cover has landed, and with null once it has gone." },
+      { name: "label", type: "string", fallback: "\"Cover\"", note: "The field's label, and its accessible name." },
+      { name: "theme", type: "\"light\" | \"dark\"", fallback: "\"dark\"", note: "The field, the sockets and the label. It draws no ground of its own." },
+      { name: "showEffects", type: "boolean", fallback: "false", note: "A small switch under the row to try each effect, as on this page." },
+    ],
+    files: [
+      { name: "CoverDrop.tsx", lang: "tsx" },
+      { name: "cover-drop-particles.ts", lang: "tsx" },
+      { name: "cover-drop.css", lang: "css" },
+    ],
+    info: {
+      paragraphs: [
+        "The grains are the finished cover. The photo is sampled once, exactly as object-fit: cover will show it in the field, one pixel per 3px cell, and every cell inside the rounded corners becomes a grain of that colour. Each grain starts at the matching spot inside the thumbnail you are dragging — rotated and scaled with it — so at the first frame the cluster is the small picture, and at the last it is the big one; the sharp image is already underneath and the canvas fades off it. Removing the cover plays the same paths backwards into the empty slot.",
+        "Around twelve thousand grains move every frame, so they are not drawn one by one: each frame writes straight into one ImageData buffer, one 32-bit word per pixel, and puts it on a canvas fixed to the viewport, so nothing the field sits in can clip the flight. The drag is a pointer drag rather than HTML drag and drop, so it works the same with a finger, and the ghost leans with your speed; a drop that misses flies home to its slot.",
+        "Tap a photo to drop it without dragging, and the remove button sends the grains back. Photos from another origin are drawn into a canvas to be sampled, so they need CORS headers; one without simply swaps in. With reduced motion every change is a short fade.",
+      ],
+    },
+    origin: { label: "Folder · Cover Drop" },
+  },
   "sling-slider": {
     tagline: "A slider you can drag, or sling: pull the ball back and let it fly to the value.",
     blurb:

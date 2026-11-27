@@ -1,0 +1,366 @@
+/* ===========================================================================
+   Cover Drop (CoverDrop.tsx).
+
+   One column: the label, the cover field and the row of photos, all the
+   same width, so the row reads as the field's source. The field draws no
+   ground of its own beyond its surface: it sits on whatever is behind it.
+
+   Corners are concentric: the cover is 18px (the particle engine cuts its
+   grains to the same radius), the smaller tiles 14px.
+
+   Light is not dark inverted. The empty field on light is a shade under the
+   page, not white, so a photo landing in it reads as filling a hole rather
+   than covering a card.
+=========================================================================== */
+
+.pcd {
+  --pcd-surface: #1b1b1b;
+  --pcd-socket: #202020;
+  --pcd-hairline: rgba(255, 255, 255, 0.06);
+  --pcd-muted: #8a8a8a;
+  --pcd-faint: #6b6b6b;
+  --pcd-dash: rgba(255, 255, 255, 0.32);
+  --pcd-dash-strong: rgba(255, 255, 255, 0.7);
+  --pcd-focus: rgba(255, 255, 255, 0.5);
+  --pcd-sheen: rgba(255, 255, 255, 0.045);
+  --pcd-pill: rgba(255, 255, 255, 0.1);
+  --pcd-ink: #ededed;
+  --pcd-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: min(440px, 100%);
+  color: var(--pcd-ink);
+  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  /* a control, not copy: a drag that misses a tile should not select text */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.pcd[data-theme="light"] {
+  --pcd-surface: #e9e9ec;
+  --pcd-socket: #e2e2e6;
+  --pcd-hairline: rgba(0, 0, 0, 0.06);
+  --pcd-muted: #5f5f66;
+  --pcd-faint: #8d8d95;
+  --pcd-dash: rgba(0, 0, 0, 0.28);
+  --pcd-dash-strong: rgba(0, 0, 0, 0.6);
+  --pcd-focus: rgba(0, 0, 0, 0.45);
+  --pcd-sheen: rgba(255, 255, 255, 0.5);
+  --pcd-pill: rgba(0, 0, 0, 0.07);
+  --pcd-ink: #18181b;
+}
+
+.pcd__label {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--pcd-muted);
+  letter-spacing: -0.005em;
+}
+
+/* ---------- The cover field ---------- */
+
+.pcd__zone {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  border-radius: 18px;
+  background: var(--pcd-surface);
+  box-shadow: inset 0 0 0 1px var(--pcd-hairline);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.pcd__placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--pcd-faint);
+  font-size: 13px;
+  transition:
+    opacity 150ms ease-out,
+    color 150ms ease;
+}
+
+.pcd__zone[data-over] .pcd__placeholder {
+  color: var(--pcd-muted);
+}
+
+.pcd__zone[data-filled] .pcd__placeholder {
+  opacity: 0;
+}
+
+.pcd__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  user-select: none;
+}
+
+/* waiting under the grains; the canvas reveals it when they land */
+.pcd__img[data-pending] {
+  opacity: 0;
+}
+
+.pcd__img[data-leaving] {
+  opacity: 0;
+  transform: scale(0.98);
+  transition:
+    opacity 180ms var(--pcd-ease-out),
+    transform 180ms var(--pcd-ease-out);
+}
+
+/* the dashed drop outline, drawn over whatever is in the field */
+.pcd__outline {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  border: 1px dashed var(--pcd-dash);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease-out;
+}
+
+.pcd__zone[data-over] .pcd__outline {
+  opacity: 1;
+}
+
+.pcd__zone[data-filled][data-over] .pcd__outline {
+  border-color: rgba(255, 255, 255, 0.75);
+}
+
+/* the remove button sits on the photo, so it is dark glass in both themes */
+.pcd__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(24, 24, 24, 0.62);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  opacity: 1;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    opacity 200ms var(--pcd-ease-out),
+    transform 200ms var(--pcd-ease-out),
+    background-color 150ms ease;
+}
+
+/* a bigger target than it looks, for a thumb */
+.pcd__close::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+}
+
+@starting-style {
+  .pcd__close {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pcd__close:hover {
+    background: rgba(40, 40, 40, 0.8);
+  }
+}
+
+.pcd__close:active {
+  transform: scale(0.92);
+}
+
+.pcd__close:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 2px;
+}
+
+/* ---------- The row of photos ---------- */
+
+.pcd__thumbs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  /* 12 + 4: a touch more air between the field and its source than the label and the field */
+  margin-top: 4px;
+}
+
+/* the empty socket a photo leaves behind while it is in use */
+.pcd__slot {
+  aspect-ratio: 1;
+  border-radius: 14px;
+  background:
+    radial-gradient(120% 120% at 30% 20%, var(--pcd-sheen), transparent 60%),
+    var(--pcd-socket);
+  box-shadow: inset 0 0 0 1px var(--pcd-hairline);
+}
+
+.pcd__thumb {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  background: none;
+  cursor: grab;
+  /* the row is where a drag starts, so a touch here drags rather than scrolls */
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  transition:
+    opacity 200ms var(--pcd-ease-out),
+    transform 200ms var(--pcd-ease-out);
+}
+
+.pcd__thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  pointer-events: none;
+  user-select: none;
+}
+
+.pcd__thumb:active {
+  transform: scale(0.97);
+}
+
+.pcd__thumb:focus-visible {
+  outline: 2px solid var(--pcd-focus);
+  outline-offset: 3px;
+}
+
+.pcd__thumb[data-hidden] {
+  opacity: 0;
+  transform: scale(0.94);
+  cursor: default;
+  /* it leaves at once — it has been picked up; only the return is animated */
+  transition: none;
+}
+
+/* ---------- The effect switch ---------- */
+
+.pcd__effects {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-self: center;
+  width: 216px;
+  margin-top: 8px;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--pcd-surface);
+  box-shadow: inset 0 0 0 1px var(--pcd-hairline);
+}
+
+.pcd__effects-pill {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: calc((100% - 6px) / 3);
+  height: calc(100% - 6px);
+  border-radius: 999px;
+  background: var(--pcd-pill);
+  transition: transform 250ms var(--pcd-ease-out);
+}
+
+.pcd__effect {
+  position: relative;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--pcd-faint);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 150ms ease-out;
+}
+
+.pcd__effect[data-active] {
+  color: var(--pcd-ink);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pcd__effect:not([data-active]):hover {
+    color: var(--pcd-muted);
+  }
+}
+
+.pcd__effect:focus-visible {
+  outline: 2px solid var(--pcd-focus);
+  outline-offset: 1px;
+}
+
+/* ---------- The drag ghost (portalled to <body>) ---------- */
+
+.pcd-ghost {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  border-radius: 14px;
+  overflow: hidden;
+  pointer-events: none;
+  will-change: transform;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 18px 40px rgba(0, 0, 0, 0.35),
+    0 4px 12px rgba(0, 0, 0, 0.22);
+}
+
+.pcd-ghost img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pcd__img:not([data-pending]):not([data-leaving]) {
+    animation: pcd-fade 200ms ease-out;
+  }
+
+  .pcd__effects-pill {
+    transition: none;
+  }
+}
+
+@keyframes pcd-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .pcd__thumbs {
+    gap: 10px;
+  }
+}

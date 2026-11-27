@@ -138,6 +138,21 @@ export type Entry = {
 
 const ENTRIES: Entry[] = [
   {
+    slug: "cover-drop",
+    category: "controls",
+    name: "Cover Drop",
+    /* a recording of the live field in its dark theme on Burst: two photos dropped in, one tapped, then removed back into its slot */
+    clip: "/clips/loop/cover-drop.mp4",
+    /* the loop's own first frame: the empty field and the row under it */
+    poster: "/clips/loop/cover-drop.jpg",
+    sound: false,
+    /* the recording leaves wide field around the column: 1.25 brings it forward and keeps the burst in */
+    zoom: 1.25,
+    stage: "#f4f4f5",
+    stageDark: "#131313",
+    clipStage: "#131313",
+  },
+  {
     slug: "sling-slider",
     category: "controls",
     name: "Sling Slider",
